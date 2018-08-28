@@ -1,0 +1,73 @@
+version: '3'
+services:
+  db:
+    image: "postgres:9.6.5"
+    volumes:
+      - ./docker-entrypoint-initdb.d/init-tables.sh:/docker-entrypoint-initdb.d/init-tables.sh
+    env_file:
+     - env_file
+    networks:
+      - db_network
+  flaskapp:
+    build: .
+    env_file:
+      - env_file
+    volumes:
+      - .:/opt/services/flaskapp/src
+    networks:
+      - db_network
+      - web_network
+    depends_on:
+      - db
+  rabbit:
+    image: "rabbitmq:3-management"
+    hostname: "rabbit"
+    env_file:
+     - env_file
+    ports:
+      - "15672:15672"
+      - "5677:5677"
+    labels:
+      NAME: "rabbitmq"
+    networks:
+     - ingestion_network
+  ingestion:
+    build: ingestion/.
+    env_file:
+      - env_file
+    networks:
+      - ingestion_network
+    restart: on-failure
+    depends_on:
+      - rabbit
+    ports:
+     - "80:5672"
+  processing:
+    build: processing/.
+    networks:
+      - ingestion_network
+      - db_network
+    restart: on-failure
+    depends_on:
+      - rabbit
+    ports:
+     - "81:5672"
+  nginx:
+    image: "nginx:1.13.5"
+    ports:
+      - "80:8080"
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+    networks:
+      - web_network
+    depends_on: 
+      - flaskapp
+networks:
+  db_network:
+    driver: bridge
+  web_network:
+    driver: bridge
+  ingestion_network:
+    driver: bridge
+volumes:
+  dbdata:
