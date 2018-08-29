@@ -3,6 +3,7 @@ import pika
 import json
 import os
 import time
+import sys
 from utils import parse_log, is_get_request
 
 #Connect  to RabbitMQ
@@ -17,7 +18,7 @@ while True:
     except pika.exceptions.ConnectionClosed:
         print('Ingestion: RabbitMQ not up yet.')
         time.sleep(2)
-        
+
 print('Ingestion: Connection to RabbitMQ established')
 
 
@@ -46,8 +47,8 @@ while True:
             channel.basic_publish(exchange='',
                                   routing_key='log-analysis',
                                   body=body)
-        
+
     except:
         print("Unexpected error:" +  sys.exc_info()[0])
-    
+
 connection.close()
