@@ -44,6 +44,8 @@ services:
      - "80:5672"
   processing:
     build: processing/.
+    env_file:
+      - env_file
     networks:
       - ingestion_network
       - db_network
