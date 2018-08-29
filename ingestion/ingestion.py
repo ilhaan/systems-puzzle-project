@@ -49,6 +49,6 @@ while True:
                                   body=body)
 
     except:
-        print("Unexpected error:" +  sys.exc_info()[0])
+        print("Unexpected error:" +  str(sys.exc_info()[0]))
 
 connection.close()
