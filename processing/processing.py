@@ -17,7 +17,7 @@ while True:
     except pika.exceptions.AMQPConnectionError:
         print('Processing: RabbitMQ not up yet.')
         time.sleep(2)
-        
+
 print('Processing: Connection to RabbitMQ established')
 
 # Connect to log-analysis channgel
@@ -32,12 +32,12 @@ cur = conn.cursor()
 # main function that reads from RabbitMQ queue and stores it in database
 def callback(ch, method, properties, body):
     msg = json.loads(body)
-    values = "to_date(\'" + msg['day'] + "\', \'YYYY-MM-DD\')" + ", " + '200'
+    values = "to_date(\'" + msg['day'] + "\', \'YYYY-MM-DD\')" + ", " + msg['status']
     sql = """INSERT INTO weblogs (day, status)
              VALUES (%s);""" % values
     cur.execute(sql, body)
     conn.commit()
-    
+
 #Start consumer
 channel.basic_consume(callback,
                       queue='log-analysis',
