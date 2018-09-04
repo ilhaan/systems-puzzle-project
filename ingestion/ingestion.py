@@ -29,7 +29,7 @@ channel.queue_declare(queue='log-analysis')
 
 # Read weblogs
 
-f = open('weblogs.log', 'r')
+f = open('weblogs.log', 'r', errors='replace')
 
 while True:
     try:
