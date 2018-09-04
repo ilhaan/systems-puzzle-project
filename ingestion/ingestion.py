@@ -51,4 +51,6 @@ while True:
     except:
         print("Unexpected error:" +  str(sys.exc_info()[0]))
 
+print('Ingestion: Log file parse complete')
 connection.close()
+print('Ingestion: Connection to RabbitMQ closed')
