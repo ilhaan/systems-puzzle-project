@@ -18,6 +18,16 @@ def index():
     cur.execute(sql_all)
     all = cur.fetchone()[0]
 
+    # Get number of all local GET requests
+    sql_local_all = """SELECT COUNT(*) FROM weblogs WHERE source = \'local\';"""
+    cur.execute(sql_local_all)
+    local_all = cur.fetchone()[0]
+
+    # Get number of all remote GET requests
+    sql_remote_all = """SELECT COUNT(*) FROM weblogs WHERE source = \'remote\';"""
+    cur.execute(sql_remote_all)
+    remote_all = cur.fetchone()[0]
+
     # Get number of all succesful requests
     sql_success = """SELECT COUNT(*) FROM weblogs WHERE status LIKE \'2__\';"""
     cur.execute(sql_success)
@@ -39,8 +49,8 @@ def index():
     remoterate = "No entries yet!"
     if all != 0:
         rate = str(success / all)
-        localrate = str(local / all)
-        remoterate = str(remote / all)
+        localrate = str(local / local_all)
+        remoterate = str(remote / remote_all)
 
     return render_template('index.html', rate = rate, localrate = localrate, remoterate = remoterate)
 
