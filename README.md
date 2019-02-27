@@ -1,6 +1,6 @@
 # systems-puzzle-project
 
-This repo consists of my solution for [Insight DevOps Engineering Systems Puzzle: Weblogs](https://github.com/InsightDataScience/Systems-Puzzle-Weblogs). 
+This repo consists of my solution for Insight DevOps Engineering Systems Puzzle: Weblogs *(link to original repo does not work anymore)*. 
 
 ## Requirements: 
 * [Docker](https://www.docker.com/)
